@@ -7,26 +7,19 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
-  imageNameS: 'service-tracker-ui:latest'
-  imageNameQ: 'quakes-api:latest'
-  imageNameW: 'weather-api:latest'
-  imageNameD: 'data-api:latest'
-  imageNameF: 'flights-api:latest'
+  imageNameS: 'service-tracker-ui:1.0'
+  imageNameQ: 'quakes-api:1.0'
+  imageNameW: 'weather-api:1.0'
+  imageNameD: 'data-api:1.0'
+  imageNameF: 'flights-api:1.0'
 
 steps:
 - script: |
-    docker build -f app/service-tracker-ui/Dockerfile -t azcloudnative/$(imageNameS) app/service-tracker-ui
-    docker build -f app/quakes-api/Dockerfile -t azcloudnative/$(imageNameQ) app/quakes-api
-    docker build -f app/weather-api/Dockerfile -t azcloudnative/$(imageNameW) app/weather-api
-    docker build -f app/data-api/Dockerfile -t azcloudnative/$(imageNameD) app/data-api
-    docker build -f app/flights-api/Dockerfile -t azcloudnative/$(imageNameF) app/flights-api
+    az acr build -t hackfest/data-api:1.0 -r $ACRNAME --no-logs -o json app/data-api --no-wait
+    az acr build -t hackfest/flights-api:1.0 -r $ACRNAME --no-logs -o json app/flights-api --no-wait
+    az acr build -t hackfest/quakes-api:1.0 -r $ACRNAME --no-logs -o json app/quakes-api --no-wait
+    az acr build -t hackfest/weather-api:1.0 -r $ACRNAME --no-logs -o json app/weather-api --no-wait
+    az acr build -t hackfest/service-tracker-ui:1.0 -r $ACRNAME --no-logs -o json app/service-tracker-ui --no-wait
 
-- script: docker login -u $(dockerUser) -p $(dockerPass)
-  displayName: 'Docker Login'
-  
-- script: |
-    docker push azcloudnative/$(imageNameS)
-    docker push azcloudnative/$(imageNameW)
-    docker push azcloudnative/$(imageNameD)
-    docker push azcloudnative/$(imageNameF)
-    docker push azcloudnative/$(imageNameQ)
+- script: az acr task list-runs -r $ACRNAME -o table
+  displayName: 'Docker Build and Push'
