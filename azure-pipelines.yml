@@ -1,25 +1,31 @@
-# Docker image
-# Build a Docker image to run, deploy, or push to a container registry.
-# Add steps that use Docker Compose, tag images, push to a registry, run an image, and more:
-# https://docs.microsoft.com/vsts/pipelines/languages/docker
+---
+trigger:
+- none
 
-pool:
-  vmImage: 'Ubuntu 16.04'
+parameters:
 
-variables:
-  imageNameS: 'service-tracker-ui:1.0'
-  imageNameQ: 'quakes-api:1.0'
-  imageNameW: 'weather-api:1.0'
-  imageNameD: 'data-api:1.0'
-  imageNameF: 'flights-api:1.0'
+- name: notify_email
+  displayName: Notify to (e-mail)
+  type: string
+  default: afolabi88@gmail.com
 
-steps:
-- script: |
-    az acr build -t hackfest/data-api:1.0 -r $ACRNAME --no-logs -o json app/data-api --no-wait
-    az acr build -t hackfest/flights-api:1.0 -r $ACRNAME --no-logs -o json app/flights-api --no-wait
-    az acr build -t hackfest/quakes-api:1.0 -r $ACRNAME --no-logs -o json app/quakes-api --no-wait
-    az acr build -t hackfest/weather-api:1.0 -r $ACRNAME --no-logs -o json app/weather-api --no-wait
-    az acr build -t hackfest/service-tracker-ui:1.0 -r $ACRNAME --no-logs -o json app/service-tracker-ui --no-wait
+stages:
+- stage: Build
+  variables:
+  - group: Build
 
-- script: az acr task list-runs -r $ACRNAME -o table
-  displayName: 'Docker Build and Push'
+  jobs:
+  - job: Plan 
+    pool:
+      vmImage: 'Ubuntu 16.04'
+
+    steps:
+    - script: |
+        az acr build -t hackfest/data-api:1.0 -r $ACRNAME --no-logs -o json app/data-api --no-wait
+        az acr build -t hackfest/flights-api:1.0 -r $ACRNAME --no-logs -o json app/flights-api --no-wait
+        az acr build -t hackfest/quakes-api:1.0 -r $ACRNAME --no-logs -o json app/quakes-api --no-wait
+        az acr build -t hackfest/weather-api:1.0 -r $ACRNAME --no-logs -o json app/weather-api --no-wait
+        az acr build -t hackfest/service-tracker-ui:1.0 -r $ACRNAME --no-logs -o json app/service-tracker-ui --no-wait
+
+    - script: az acr task list-runs -r $ACRNAME -o table
+      displayName: 'Docker Build and Push'
