@@ -15,8 +15,9 @@ stages:
   - group: Build
 
   jobs:
-  - job: Plan 
-    pool: Default
+  - job: Docker_Build
+    pool:
+      vmImage: ubuntu-latest
 
     steps:
     - script: |
