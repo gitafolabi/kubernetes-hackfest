@@ -16,8 +16,7 @@ stages:
 
   jobs:
   - job: Plan 
-    pool:
-      vmImage: 'Ubuntu 16.04'
+    pool: Default
 
     steps:
     - script: |
