@@ -20,7 +20,7 @@ stages:
 
     steps:
     - task: AzureCLI@1
-      displayName: Azure CLI
+      displayName: Build and Push Docker Images
       inputs:
         azureSubscription: 'VSSubbscription'
         scriptLocation: inlineScript
@@ -32,3 +32,28 @@ stages:
           az acr build -t hackfest/quakes-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/quakes-api --no-wait
           az acr build -t hackfest/weather-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/weather-api --no-wait
           az acr build -t hackfest/service-tracker-ui:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/service-tracker-ui --no-wait
+
+- stage: Deploy
+  variables:
+  - name: ACRNAME
+    value: acrhackfestafolabiomotoso17405
+  - name: namespace
+    value: hackfest
+  - name: RGNAME
+    value: rg-afolabiomotoso17405
+
+  jobs:
+  - job: K8s_Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+    - task: AzureCLI@1
+      displayName: Test k8s and Helm
+      inputs:
+        azureSubscription: 'VSSubbscription'
+        scriptLocation: inlineScript
+        inlineScript: |
+          kubectl get ns ${{ variables.namespace }}
+          kubectl get po -n ${{ variables.namespace }}
+          helm list -n ${{ variables.namespace }}
