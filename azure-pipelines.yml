@@ -19,6 +19,20 @@ stages:
       vmImage: 'ubuntu-latest'
 
     steps:
+    - task: AzureCLI@2
+      displayName: Azure CLI
+      inputs:
+        azureSubscription: 'Visual Studio Enterprise Subscription'
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          az --version
+          az account show
+        # workingDirectory: '$(System.DefaultWorkingDirectory)/Azure/deployment'
+        failOnStandardError: true
+        powerShellIgnoreLASTEXITCODE: true
+      displayName: 'AZ Account Show'
+      name: 'AZShow'
     - script: |
         az acr build -t hackfest/data-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/data-api --no-wait
         az acr build -t hackfest/flights-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/flights-api --no-wait
