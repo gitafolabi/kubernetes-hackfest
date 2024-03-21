@@ -14,9 +14,9 @@ stages:
     value: acrhackfest
 
   jobs:
-  - job: Plan 
+  - job: Docker_Build
     pool:
-      vmImage: 'Ubuntu 16.04'
+      vmImage: 'ubuntu-latest'
 
     steps:
     - script: |
