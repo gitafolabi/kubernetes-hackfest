@@ -27,16 +27,8 @@ stages:
         inlineScript: |
           az --version
           az account show
-        # workingDirectory: '$(System.DefaultWorkingDirectory)/Azure/deployment'
-        # failOnStandardError: true
-        # powerShellIgnoreLASTEXITCODE: true
-      name: 'AZShow'
-    - script: |
-        az acr build -t hackfest/data-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/data-api --no-wait
-        az acr build -t hackfest/flights-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/flights-api --no-wait
-        az acr build -t hackfest/quakes-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/quakes-api --no-wait
-        az acr build -t hackfest/weather-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/weather-api --no-wait
-        az acr build -t hackfest/service-tracker-ui:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/service-tracker-ui --no-wait
-
-    - script: az acr task list-runs -r ${{ variables.ACRNAME }} -o table
-      displayName: 'Docker Build and Push'
+          az acr build -t hackfest/data-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/data-api --no-wait
+          az acr build -t hackfest/flights-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/flights-api --no-wait
+          az acr build -t hackfest/quakes-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/quakes-api --no-wait
+          az acr build -t hackfest/weather-api:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/weather-api --no-wait
+          az acr build -t hackfest/service-tracker-ui:1.0 -r ${{ variables.ACRNAME }} --no-logs -o json app/service-tracker-ui --no-wait
