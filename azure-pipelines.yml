@@ -2,30 +2,30 @@
 trigger:
 - none
 
-parameters:
+# parameters:
 
-- name: notify_email
-  displayName: Notify to (e-mail)
-  type: string
-  default: afolabi88@gmail.com
+# - name: notify_email
+#   displayName: Notify to (e-mail)
+#   type: string
+#   default: afolabi88@gmail.com
 
-stages:
-- stage: Build
-  variables:
-  - group: Build
+# stages:
+# - stage: Build
+#   variables:
+#   - group: Build
 
-  jobs:
-  - job: Docker_Build
-    pool:
-      vmImage: ubuntu-latest
+jobs:
+- job: Docker_Build
+  pool:
+    vmImage: 'ubuntu-latest'
 
-    steps:
-    - script: |
-        az acr build -t hackfest/data-api:1.0 -r $ACRNAME --no-logs -o json app/data-api --no-wait
-        az acr build -t hackfest/flights-api:1.0 -r $ACRNAME --no-logs -o json app/flights-api --no-wait
-        az acr build -t hackfest/quakes-api:1.0 -r $ACRNAME --no-logs -o json app/quakes-api --no-wait
-        az acr build -t hackfest/weather-api:1.0 -r $ACRNAME --no-logs -o json app/weather-api --no-wait
-        az acr build -t hackfest/service-tracker-ui:1.0 -r $ACRNAME --no-logs -o json app/service-tracker-ui --no-wait
+  steps:
+  - script: |
+      az acr build -t hackfest/data-api:1.0 -r $ACRNAME --no-logs -o json app/data-api --no-wait
+      az acr build -t hackfest/flights-api:1.0 -r $ACRNAME --no-logs -o json app/flights-api --no-wait
+      az acr build -t hackfest/quakes-api:1.0 -r $ACRNAME --no-logs -o json app/quakes-api --no-wait
+      az acr build -t hackfest/weather-api:1.0 -r $ACRNAME --no-logs -o json app/weather-api --no-wait
+      az acr build -t hackfest/service-tracker-ui:1.0 -r $ACRNAME --no-logs -o json app/service-tracker-ui --no-wait
 
-    - script: az acr task list-runs -r $ACRNAME -o table
-      displayName: 'Docker Build and Push'
+  - script: az acr task list-runs -r $ACRNAME -o table
+    displayName: 'Docker Build and Push'
