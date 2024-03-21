@@ -21,11 +21,11 @@ jobs:
 
   steps:
   - script: |
-      az acr build -t hackfest/data-api:1.0 -r $ACRNAME --no-logs -o json app/data-api --no-wait
-      az acr build -t hackfest/flights-api:1.0 -r $ACRNAME --no-logs -o json app/flights-api --no-wait
-      az acr build -t hackfest/quakes-api:1.0 -r $ACRNAME --no-logs -o json app/quakes-api --no-wait
-      az acr build -t hackfest/weather-api:1.0 -r $ACRNAME --no-logs -o json app/weather-api --no-wait
-      az acr build -t hackfest/service-tracker-ui:1.0 -r $ACRNAME --no-logs -o json app/service-tracker-ui --no-wait
+      az acr build -t hackfest/data-api:1.0 -r $(ACRNAME) --no-logs -o json app/data-api --no-wait
+      az acr build -t hackfest/flights-api:1.0 -r $(ACRNAME) --no-logs -o json app/flights-api --no-wait
+      az acr build -t hackfest/quakes-api:1.0 -r $(ACRNAME) --no-logs -o json app/quakes-api --no-wait
+      az acr build -t hackfest/weather-api:1.0 -r $(ACRNAME) --no-logs -o json app/weather-api --no-wait
+      az acr build -t hackfest/service-tracker-ui:1.0 -r $(ACRNAME) --no-logs -o json app/service-tracker-ui --no-wait
 
-  - script: az acr task list-runs -r $ACRNAME -o table
+  - script: az acr task list-runs -r $(ACRNAME) -o table
     displayName: 'Docker Build and Push'
