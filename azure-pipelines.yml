@@ -41,6 +41,8 @@ stages:
     value: hackfest
   - name: RGNAME
     value: rg-afolabiomotoso17405
+  - name: CLUSTERNAME
+    value: aksafolabiomotoso17405
 
   jobs:
   - job: K8s_Deploy
@@ -48,6 +50,15 @@ stages:
       vmImage: 'ubuntu-latest'
 
     steps:
+    - task: AzureCLI@1
+      displayName: Build and Push Docker Images
+      inputs:
+        azureSubscription: 'VSSubbscription'
+        scriptLocation: inlineScript
+        inlineScript: |
+          az --version
+          az aks get-credentials -n $CLUSTERNAME -g $RGNAME
+
     - task: AzureCLI@1
       displayName: Test k8s and Helm
       inputs:
